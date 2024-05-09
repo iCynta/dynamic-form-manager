@@ -15,6 +15,23 @@
                     @endif
 
                     <div class="table-responsive">
+                        <!-- Displaying  message -->
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+
+                        @if (session('success'))
+                            <div class="alert alert-success">
+                                {{ session('success') }}
+                            </div>
+                        @endif
+                        <!-- Displaying message ends -->
                         <table class="table table-bordered table-striped">
                             <thead>
                                 <tr>
@@ -34,7 +51,7 @@
                                         <td>{{ $loop->index + 1 }}</td>
                                         <td>{{ $form->form_name }}</td>
                                         <td> 
-                                            <a href='{{ route('dynamic-forms.view', $form->id) }}' class="btn btn-sm btn-primary">VIEW</a>
+                                            <a href='{{ route('show-form', $form->id) }}' class="btn btn-sm btn-primary">VIEW</a>
                                             <a href='{{ route('dynamic-forms.edit', $form->id) }}' class="btn btn-sm btn-warning">EDIT</a>
                                             <a href='{{ route('dynamic-forms.delete', $form->id) }}' class="btn btn-sm btn-danger">DELETE</a>
                                         </td>                                    

@@ -33,7 +33,6 @@
                                 <label for="form_name">Form Name</label>
                                 <input type="text" id="form_name" name="form_name" class="form-control">
                             </div>
-
                             <div id="form_fields">
                                 <!-- Dynamic fields will be added here -->
                             </div>

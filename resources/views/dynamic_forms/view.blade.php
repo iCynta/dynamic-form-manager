@@ -29,31 +29,32 @@
                     <div class="card-header">{{ $form->form_name }}</div>
                     <div class="card-body">
                 @if (!is_null($form) && !is_null($form->form_fields))
-                    <form action="{{ route('dynamic-forms.update', $form->id) }}" method="POST">
-                        @csrf
-                        @method('PUT')
+                <form method="POST" action="{{ route('submit-form') }}">
+                    @csrf
+                    <input type="hidden" name="form_id" value="{{ $form->id }}">
+                    <input type="hidden" name="form_name" value="{{ $form->form_name }}">
 
-@foreach (json_decode($form->form_fields, true) as $key => $field)
-    <div class="form-group">
-        <label for="field_{{ $key }}">Label: {{ $field['label'] }}</label>
-        <select id="html_field_{{ $key }}" name="fields[{{ $key }}][html_field]" class="form-control">
-            <option value="text" @if ($field['html_field'] === 'text') selected @endif>Text</option>
-            <option value="number" @if ($field['html_field'] === 'number') selected @endif>Number</option>
-            <option value="select" @if ($field['html_field'] === 'select') selected @endif>Select</option>
-        </select>
-        <input type="text" id="helper_text_{{ $key }}" name="fields[{{ $key }}][helper_text]" class="form-control" value="{{ old('fields.' . $key . '.helper_text', $field['helper_text'] ?? '') }}" placeholder="Helper Text">
+                    @foreach (json_decode($form->form_fields, true) as $key => $field)
+                        <div class="form-group">
+                            <label for="field_{{ $key }}">{{ $field['label'] }}</label>
+                            @if ($field['html_field'] === 'text')
+                                <input type="text" id="field_{{ $key }}" name="form_data[{{ $field['label'] }}]" class="form-control">
+                            @elseif ($field['html_field'] === 'number')
+                                <input type="number" id="field_{{ $key }}" name="form_data[{{ $field['label'] }}]" class="form-control">
+                            @elseif ($field['html_field'] === 'select')
+                                <select id="field_{{ $key }}" name="form_data[{{ $field['label'] }}]" class="form-control">
+                                    @foreach ($field['options'] as $option)
+                                        <option value="{{ $option }}">{{ $option }}</option>
+                                    @endforeach
+                                </select>
+                            @endif
+                        </div><br/>
+                    @endforeach
+                    <div class="text-center mt-3">
+                    <button type="submit" class="btn btn-primary">Submit Form</button>
+                    </div>
+                </form>
 
-        <!-- Add Edit and Delete buttons -->
-        <a href="{{ route('dynamic-forms.edit-field', [$form->id, $key]) }}" class="btn btn-sm btn-warning">Edit</a>
-        <a href="{{ route('dynamic-forms.delete-field', [$form->id, $key]) }}" class="btn btn-sm btn-danger">Delete</a>
-    </div>
-@endforeach
-
-
-                        @can('edit_forms')
-                            <button type="submit" class="btn btn-primary">Update Form</button>
-                        @endcan
-                    </form>
                 @else
                     <p>No form or form fields found.</p>
                 @endif

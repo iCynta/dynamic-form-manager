@@ -88,6 +88,59 @@ class DynamicFormController extends Controller
 
         return redirect()->back()->with('success', 'Form data stored successfully.');
     }
+    
+    public function update(Request $request, $id)
+    {
+        // Validate the form data and update the form in the database
+        $validatedData = $request->validate([
+            'form_name' => 'required|string',
+            // Add validation rules for other fields as needed
+        ]);
+
+        // Update the form in the database
+        $form = DynamicForm::findOrFail($id);
+        $form->update($validatedData);
+
+        // Retrieve the updated form data
+        $updatedForm = DynamicForm::findOrFail($id);
+
+        // Redirect back to the form view with a success message
+        return redirect()->route('dynamic-forms.edit', $id)->with('success', 'Form updated successfully')->with('form', $updatedForm);
+    }
+    
+    public function show(Form $form)
+    {
+        // Assuming you have a Form model and the $form parameter is automatically resolved based on the form ID in the URL
+        return view('dynamic_forms.show', compact('form'));
+    }
+    
+    public function showForm($formId)
+    {
+//        $form = DynamicForm::findOrFail($formId);
+//        $formFields = json_decode($form->form_fields, true);
+//
+//        return view('dynamic_forms.show', compact('form', 'formFields'));
+        
+        try {
+            $form = DynamicForm::findOrFail($formId);
+            $fields = $form->fields; 
+            return view('dynamic_forms.show', compact('form', 'fields'));
+        } catch (ModelNotFoundException $e) {
+            return back()->withErrors(['message' => 'Form not found!']);
+        }
+    }
+    
+    public function destroy($formId)
+    {
+        // Find the form by its ID
+        $form = DynamicForm::findOrFail($formId);
+
+        // Delete the form
+        $form->delete();
+
+        // Redirect back or to a specific route
+        return redirect()->back()->with('success', 'Form deleted successfully.');
+    }
 
 
 }
