@@ -29,17 +29,21 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($forms as $form)
-                                <tr>
-                                    <td class="col-1">{{ $form->id }}</td>
-                                    <td class="col-8">{{ $form->form_name }}</td>
-                                    <td class="col-3"> 
-                                        <a href='#' class="btn btn-sm btn-primary">VIEW</a>
-                                        <a href='#' class="btn btn-sm btn-warning">EDIT</a>
-                                        <a href='#' class="btn btn-sm btn-danger">DELETE</a>
-                                    </td>                                    
-                                </tr>
-                                @endforeach
+                                @forelse ($forms as  $form)
+                                    <tr>
+                                        <td>{{ $loop->index + 1 }}</td>
+                                        <td>{{ $form->form_name }}</td>
+                                        <td> 
+                                            <a href='{{ route('dynamic-forms.view', $form->id) }}' class="btn btn-sm btn-primary">VIEW</a>
+                                            <a href='{{ route('dynamic-forms.edit', $form->id) }}' class="btn btn-sm btn-warning">EDIT</a>
+                                            <a href='{{ route('dynamic-forms.delete', $form->id) }}' class="btn btn-sm btn-danger">DELETE</a>
+                                        </td>                                    
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4">No forms found</td>
+                                    </tr>
+                                @endforelse
                                 
                             </tbody>
                         </table>

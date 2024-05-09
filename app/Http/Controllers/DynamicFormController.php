@@ -19,13 +19,15 @@ class DynamicFormController extends Controller
         return view('dynamic_forms.create');
     }
     
-    public function view(Request $request)
+    public function view($formId)
     {
-        $formId = $request->id;
-        $form = DynamicForm::findOrFail($id); // Find the form by ID
-        $fields = $form->fields; // Assuming 'fields' is a JSON string or array within the model
-        return view('dynamic_forms/view', compact('form', 'fields')); // Pass data to the view
-
+        try {
+            $form = DynamicForm::findOrFail($formId);
+            $fields = $form->fields; 
+            return view('dynamic_forms/view', compact('form', 'fields'));
+        } catch (ModelNotFoundException $e) {
+            return back()->withErrors(['message' => 'Form not found!']);
+        }
     }
 
     public function store(Request $request)

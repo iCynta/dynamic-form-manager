@@ -31,10 +31,6 @@ Route::get('/', function () {
 
 // Create the 'auth' route group
 Route::middleware(['auth'])->group(function () {
-    // Define your restricted routes inside this group
-//    Route::get('/home', function () {
-//        return view('home');
-//    })->name('home');
     
     
     Route::get('/home', [HomeController::class, 'index'])->name('dashboard');
@@ -44,7 +40,10 @@ Route::middleware(['auth'])->group(function () {
     })->name('create-new-form');
 
     Route::post('/dynamic-forms/store', [DynamicFormController::class, 'store'])->name('dynamic-forms.store');
-
+    Route::get('/dynamic-forms/{formId}/view', [DynamicFormController::class, 'view'])->name('dynamic-forms.view');
+    Route::get('/dynamic-forms/{formId}/edit', [DynamicFormController::class, 'view'])->name('dynamic-forms.edit');
+    Route::get('/dynamic-forms/{formId}/delete', [DynamicFormController::class, 'view'])->name('dynamic-forms.delete');
+    Route::put('/dynamic-forms/{id}', [DynamicFormController::class, 'update'])->name('dynamic-forms.update');
     // Add more restricted routes as needed
 });
 
