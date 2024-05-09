@@ -34,9 +34,9 @@
                                     <td class="col-1">{{ $form->id }}</td>
                                     <td class="col-8">{{ $form->form_name }}</td>
                                     <td class="col-3"> 
-                                        <button class="btn btn-sm btn-primary">VIEW</button>
-                                        <button class="btn btn-sm btn-warning">EDIT</button>
-                                        <button class="btn btn-sm btn-danger">DELETE</button>
+                                        <a href='#' class="btn btn-sm btn-primary">VIEW</a>
+                                        <a href='#' class="btn btn-sm btn-warning">EDIT</a>
+                                        <a href='#' class="btn btn-sm btn-danger">DELETE</a>
                                     </td>                                    
                                 </tr>
                                 @endforeach
