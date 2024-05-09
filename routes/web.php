@@ -44,7 +44,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dynamic-forms/{formId}/edit', [DynamicFormController::class, 'view'])->name('dynamic-forms.edit');
     Route::get('/dynamic-forms/{formId}/delete', [DynamicFormController::class, 'view'])->name('dynamic-forms.delete');
     Route::put('/dynamic-forms/{id}', [DynamicFormController::class, 'update'])->name('dynamic-forms.update');
-    // Add more restricted routes as needed
+    
+    // Form Elements Actions
+    Route::get('/dynamic-forms/{formId}/edit-field/{fieldKey}', [DynamicFormController::class, 'editField'])->name('dynamic-forms.edit-field');
+    Route::delete('/dynamic-forms/{formId}/delete-field/{fieldKey}', [DynamicFormController::class, 'deleteField'])->name('dynamic-forms.delete-field');
+
+
 });
 
 // Include authentication routes (login, register, etc.) provided by Laravel

@@ -33,28 +33,21 @@
                         @csrf
                         @method('PUT')
 
-                        @foreach (json_decode($form->form_fields, true) as $key => $field)
-                            <div class="form-group">
-                                <label for="field_{{ $key }}">{{ $field['label'] }}</label>
-                                @if ($field['html_field'] === 'text')
-                                    <input type="text" id="field_{{ $key }}" name="fields[{{ $key }}][value]" class="form-control" value="{{ old('fields.' . $key . '.value', $field['value'] ?? '') }}">
-                                @elseif ($field['html_field'] === 'number')
-                                    <input type="number" id="field_{{ $key }}" name="fields[{{ $key }}][value]" class="form-control" value="{{ old('fields.' . $key . '.value', $field['value'] ?? '') }}">
-                                @elseif ($field['html_field'] === 'select')
-                                    <select id="field_{{ $key }}" name="fields[{{ $key }}][value]" class="form-control">
-                                        @foreach ($field['options'] as $option)
-                                            <option value="{{ $option }}" @if (old('fields.' . $key . '.value', $field['value'] ?? '') === $option) selected @endif>{{ $option }}</option>
-                                        @endforeach
-                                    </select>
-                                @endif
-                                <small class="form-text text-muted">{{ $field['helper_text'] }}</small>
+@foreach (json_decode($form->form_fields, true) as $key => $field)
+    <div class="form-group">
+        <label for="field_{{ $key }}">Label: {{ $field['label'] }}</label>
+        <select id="html_field_{{ $key }}" name="fields[{{ $key }}][html_field]" class="form-control">
+            <option value="text" @if ($field['html_field'] === 'text') selected @endif>Text</option>
+            <option value="number" @if ($field['html_field'] === 'number') selected @endif>Number</option>
+            <option value="select" @if ($field['html_field'] === 'select') selected @endif>Select</option>
+        </select>
+        <input type="text" id="helper_text_{{ $key }}" name="fields[{{ $key }}][helper_text]" class="form-control" value="{{ old('fields.' . $key . '.helper_text', $field['helper_text'] ?? '') }}" placeholder="Helper Text">
 
-                                @can('edit_fields')
-                                    <a href="{{ route('edit_field', [$form->id, $key]) }}" class="btn btn-sm btn-warning">Edit</a>
-                                    <a href="{{ route('delete_field', [$form->id, $key]) }}" class="btn btn-sm btn-danger">Delete</a>
-                                @endcan
-                            </div>
-                        @endforeach
+        <!-- Add Edit and Delete buttons -->
+        <a href="{{ route('dynamic-forms.edit-field', [$form->id, $key]) }}" class="btn btn-sm btn-warning">Edit</a>
+        <a href="{{ route('dynamic-forms.delete-field', [$form->id, $key]) }}" class="btn btn-sm btn-danger">Delete</a>
+    </div>
+@endforeach
 
 
                         @can('edit_forms')
