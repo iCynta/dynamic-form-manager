@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\DynamicForm;
 use Illuminate\Support\Facades\Validator;
+use App\Jobs\SendFormCreationNotification;
 
 class DynamicFormController extends Controller
 {
@@ -79,12 +80,14 @@ class DynamicFormController extends Controller
         $formFieldsJson = json_encode($formFields);
 
         // Create a new instance of DynamicForm (assuming logic remains the same)
-        $field = new DynamicForm();
-        $field->form_name = $formName;
-        $field->form_fields = $formFieldsJson;
+        $dynamic_form = new DynamicForm();
+        $dynamic_form->form_name = $formName;
+        $dynamic_form->form_fields = $formFieldsJson;
 
         // Save the DynamicForm instance
-        $field->save();
+        $dynamic_form->save();
+        // Dispatch the job to send email notification
+        SendFormCreationNotification::dispatch($dynamic_form);
 
         return redirect()->back()->with('success', 'Form data stored successfully.');
     }
@@ -108,19 +111,15 @@ class DynamicFormController extends Controller
         return redirect()->route('dynamic-forms.edit', $id)->with('success', 'Form updated successfully')->with('form', $updatedForm);
     }
     
-    public function show(Form $form)
-    {
-        // Assuming you have a Form model and the $form parameter is automatically resolved based on the form ID in the URL
-        return view('dynamic_forms.show', compact('form'));
-    }
+//    public function show(Form $form)
+//    {
+//        // Assuming you have a Form model and the $form parameter is automatically resolved based on the form ID in the URL
+//        return view('dynamic_forms.show', compact('form'));
+//    }
     
     public function showForm($formId)
     {
-//        $form = DynamicForm::findOrFail($formId);
-//        $formFields = json_decode($form->form_fields, true);
-//
-//        return view('dynamic_forms.show', compact('form', 'formFields'));
-        
+       
         try {
             $form = DynamicForm::findOrFail($formId);
             $fields = $form->fields; 
@@ -132,13 +131,8 @@ class DynamicFormController extends Controller
     
     public function destroy($formId)
     {
-        // Find the form by its ID
         $form = DynamicForm::findOrFail($formId);
-
-        // Delete the form
         $form->delete();
-
-        // Redirect back or to a specific route
         return redirect()->back()->with('success', 'Form deleted successfully.');
     }
 

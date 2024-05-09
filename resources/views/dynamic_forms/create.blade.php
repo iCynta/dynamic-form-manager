@@ -23,7 +23,10 @@
                 @endif
 
                 <div class="card">
-                    <div class="card-header">Create Dynamic Form</div>
+                    <div class="card-header">
+                        Create Dynamic Form
+                        <a href='{{route('dashboard')}}' class='btn btn-sm btn-primary float-end'>Available Form List </a>
+                    </div>
 
                     <div class="card-body">
                         <form method="POST" action="{{ route('dynamic-forms.store') }}">
@@ -36,9 +39,10 @@
                             <div id="form_fields">
                                 <!-- Dynamic fields will be added here -->
                             </div>
-
+                            <div class="form-group"><br/>
                             <button type="button" id="addFieldBtn" class="btn btn-sm btn-secondary">Add Field</button>
-                            <button type="submit" class="btn btn-primary">Create Form</button>
+                            <button type="submit" class="btn btn-success float-end">Create Form</button>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -54,18 +58,18 @@
 
             addFieldBtn.addEventListener('click', function () {
                 const fieldGroup = document.createElement('div');
-                fieldGroup.className = 'form-group';
+                fieldGroup.className = 'form-group mt-4';
 
                 const labelInput = document.createElement('input');
                 labelInput.type = 'text';
                 labelInput.name = `fields[${fieldIndex}][label]`;
                 labelInput.placeholder = 'Label';
-                labelInput.className = 'form-control';
+                labelInput.className = 'form-control mt-2';
                 fieldGroup.appendChild(labelInput);
 
                 const htmlFieldSelect = document.createElement('select');
                 htmlFieldSelect.name = `fields[${fieldIndex}][html_field]`;
-                htmlFieldSelect.className = 'form-control';
+                htmlFieldSelect.className = 'form-control mt-2';
                 htmlFieldSelect.innerHTML = `
                     <option value="text">Text</option>
                     <option value="number">Number</option>

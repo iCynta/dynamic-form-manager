@@ -31,7 +31,7 @@ class DynamicFormDataController extends Controller
         ];
 
         // Redirect back or to a success page, passing the form data and success message
-        return redirect()->route('dynamic-forms.view', $formData->form_id)
+        return redirect()->route('public', $formData->form_id)
                          ->with('success', 'Form data submitted successfully.')
                          ->with('form_fields', $submittedFormData);
     }
