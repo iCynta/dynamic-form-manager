@@ -36,7 +36,7 @@
                             <thead>
                                 <tr>
                                     <th colspan='3'>
-                                        <a href={{route('create-new-form')}} class="btn btn-md btn-success float-end">NEW</a>
+                                        <a href={{route('create-new-form')}} class="btn btn-md btn-success float-end">ADD A NEW DYNAMIC FORM</a>
                                     </th>
                                 </tr>
                                 <tr>
@@ -48,9 +48,9 @@
                             <tbody>
                                 @forelse ($forms as  $form)
                                     <tr>
-                                        <td>{{ $loop->index + 1 }}</td>
-                                        <td>{{ $form->form_name }}</td>
-                                        <td> 
+                                        <td class="col-1">{{ $loop->index + 1 }}</td>
+                                        <td class="col-8">{{ $form->form_name }}</td>
+                                        <td class="col-3"> 
                                             <a href='{{ route('show-form', $form->id) }}' class="btn btn-sm btn-primary">VIEW</a>
                                             <a href='{{ route('dynamic-forms.edit', $form->id) }}' class="btn btn-sm btn-warning">EDIT</a>
                                             <a href='{{ route('dynamic-forms.delete', $form->id) }}' class="btn btn-sm btn-danger">DELETE</a>

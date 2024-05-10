@@ -35,7 +35,7 @@
                                 <!-- Dynamic fields will be added here -->
                                 @foreach (json_decode($form->form_fields, true) as $key => $field)
                                     <div class="form-group">
-                                        <label for="field_{{ $key }}">{{ $field['label'] }}</label>
+                                        <label for="field_{{ $key }}" class="form-label">{{ $field['label'] }}</label>
                                         @if ($field['html_field'] === 'text')
                                             <input type="text" id="field_{{ $key }}" name="fields[{{ $key }}][{{$field['label']}}]" class="form-control" value="{{ old('fields.' . $key . '.value', $field['value'] ?? '') }}">
                                         @elseif ($field['html_field'] === 'number')
@@ -57,6 +57,7 @@
                                 <button type="submit" class="btn btn-success">Submit</button>
                             </div>
                         </form>
+                        <a href="{{route('dashboard')}}" class="btn btn-sm btn-dark">Back</a>
                     </div>
                 </div>
             </div>

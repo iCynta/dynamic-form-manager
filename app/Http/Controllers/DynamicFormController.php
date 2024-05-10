@@ -15,10 +15,10 @@ class DynamicFormController extends Controller
         return view('dynamic_forms.index', compact('forms'));
     }
 
-    public function create()
-    {
-        return view('dynamic_forms.create');
-    }
+//    public function create()
+//    {
+//        return view('dynamic_forms.create');
+//    }
     
     public function view($formId)
     {
@@ -92,24 +92,48 @@ class DynamicFormController extends Controller
         return redirect()->back()->with('success', 'Form data stored successfully.');
     }
     
+    public function edit($formId){
+        
+        try {            
+            $form = DynamicForm::findOrFail($formId);
+            $fields = json_decode($form->form_fields, true);
+            return view('dynamic_forms.edit', compact('form', 'fields'));
+            
+        } catch (ModelNotFoundException $e) {
+            return back()->withErrors(['message' => 'Form not found!']);
+        }
+    }
+    
     public function update(Request $request, $id)
     {
-        // Validate the form data and update the form in the database
+        // Validate the form data
         $validatedData = $request->validate([
             'form_name' => 'required|string',
-            // Add validation rules for other fields as needed
+            'fields' => 'required|array', // Ensure 'fields' is an array
         ]);
 
-        // Update the form in the database
+        // Retrieve the form from the database
         $form = DynamicForm::findOrFail($id);
-        $form->update($validatedData);
 
-        // Retrieve the updated form data
-        $updatedForm = DynamicForm::findOrFail($id);
+        // Update the form name
+        $form->form_name = $validatedData['form_name'];
+
+        // Merge existing form fields with updated fields from the request
+        $existingFields = json_decode($form->form_fields, true);
+        $updatedFields = $validatedData['fields'];
+        $mergedFields = array_merge($existingFields, $updatedFields);
+
+        // Update form fields
+        $form->form_fields = json_encode($mergedFields);
+
+        // Save the updated form
+        $form->save();
 
         // Redirect back to the form view with a success message
-        return redirect()->route('dynamic-forms.edit', $id)->with('success', 'Form updated successfully')->with('form', $updatedForm);
+        return redirect()->route('dynamic-forms.edit', $id)->with('success', 'Form updated successfully');
     }
+
+
     
 //    public function show(Form $form)
 //    {
@@ -118,8 +142,7 @@ class DynamicFormController extends Controller
 //    }
     
     public function showForm($formId)
-    {
-       
+    {       
         try {
             $form = DynamicForm::findOrFail($formId);
             $fields = $form->fields; 

@@ -6,15 +6,14 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DynamicFormDataController;
 use App\Http\Controllers\WelcomeController;
 
-    // Define your non-authenticated routes outside the group
-    // Route to see dynamic form public
-    Route::get('/forms/{formId}', [DynamicFormController::class, 'showForm'])->name('show-form');
-    //Route to submit data with dynamic form
-    Route::post('/submit-form', [DynamicFormDataController::class, 'store'])->name('submit-form');
+// Define your non-authenticated routes outside the group
+Route::get('/forms/{formId}', [DynamicFormController::class, 'showForm'])->name('show-form');
+//Route to submit data with dynamic form
+Route::post('/submit-form', [DynamicFormDataController::class, 'store'])->name('submit-form');
 
 // Include authentication routes (login, register, etc.) provided by Laravel
-    Auth::routes();
-    Route::get('/', [WelcomeController::class, 'index'])->name('public');
+Auth::routes();
+Route::get('/', [WelcomeController::class, 'index'])->name('public');
 
 // Create the 'auth' route group
 Route::middleware(['auth'])->group(function () {    
@@ -27,7 +26,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/dynamic-forms/store', [DynamicFormController::class, 'store'])->name('dynamic-forms.store');
     Route::get('/dynamic-forms/{formId}/view', [DynamicFormController::class, 'view'])->name('dynamic-forms.view');
-    Route::get('/dynamic-forms/{formId}/edit', [DynamicFormController::class, 'view'])->name('dynamic-forms.edit');
+    Route::get('/dynamic-forms/{formId}/edit', [DynamicFormController::class, 'edit'])->name('dynamic-forms.edit');
     Route::get('/dynamic-forms/{formId}/delete', [DynamicFormController::class, 'destroy'])->name('dynamic-forms.delete');
     Route::put('/dynamic-forms/{id}', [DynamicFormController::class, 'update'])->name('dynamic-forms.update');
     
@@ -38,7 +37,7 @@ Route::middleware(['auth'])->group(function () {
 
     
     // Update dynamic form's form data
-    //Route::put('/dynamic-forms/{form}', [DynamicFormController::class, 'update'])->name('dynamic-forms.update');
+    Route::put('/dynamic-forms/{form}', [DynamicFormController::class, 'update'])->name('dynamic-forms.update');
     
     //Route::get('/dynamic-forms/{form}', [DynamicFormController::class, 'show'])->name('dynamic-forms.show');
 
