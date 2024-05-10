@@ -23,7 +23,7 @@
                     </div>
                 @endif
                 <table class="table table-bordered table-striped">
-                            <thead>
+                            <thead class="background-dark bg-dark">
                                 <tr>
                                     <th colspan='3'>
                                         <a href={{route('create-new-form')}} class="btn btn-md btn-success float-end">NEW</a>
@@ -47,7 +47,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="4">No forms found at the moment</td>
+                                        <td colspan="4"><p class="text-alert text-warning text-center">No forms found at the moment</p></td>
                                     </tr>
                                 @endforelse
                                 

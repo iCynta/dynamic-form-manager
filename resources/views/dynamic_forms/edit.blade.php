@@ -22,8 +22,8 @@
 
                 <div class="card">
                     <div class="card-header">
-                        Edit {{$form->form_name }}
-                        <a href='{{route('dashboard')}}' class='btn btn-sm btn-primary float-end'>Available Form List</a>
+                        Edit {{ $form->form_name }}
+                        <a href='{{ route('dashboard') }}' class='btn btn-sm btn-primary float-end'>Available Form List</a>
                     </div>
 
                     <div class="card-body">
@@ -50,12 +50,22 @@
                                                                 <option value="{{ $option }}">{{ $option }}</option>
                                                             @endforeach
                                                         </select>
+                                                        <button type="button" class="btn btn-sm btn-secondary mt-2 add-option">Add Option</button>
+                                                        <ul class="list-unstyled">
+                                                            <!-- Existing options -->
+                                                            @foreach($field['options'] as $option)
+                                                                <li>
+                                                                    <input type="text" name="{{ $key }}_options[]" value="{{ $option }}" class="form-control option-input" readonly>
+                                                                    <button type="button" class="btn btn-sm btn-danger mt-2 remove-option">Remove</button>
+                                                                </li>
+                                                            @endforeach
+                                                        </ul>
                                                     @endif
                                                     <small>{{ $field['helper_text'] }}</small>
                                                 @endif
                                             @elseif(is_object($field))
                                                 @if(isset($field->label))
-                                                    <label class="form-label" >{{ $field->label }}</label>
+                                                    <label class="form-label">{{ $field->label }}</label>
                                                     @if($field->html_field === 'text')
                                                         <input type="text" name="{{ $key }}" value="{{ old($key) }}" class="form-control">
                                                     @elseif($field->html_field === 'select')
@@ -64,6 +74,18 @@
                                                                 <option value="{{ $option }}">{{ $option }}</option>
                                                             @endforeach
                                                         </select>
+                                                        <button type="button" class="btn btn-sm btn-secondary mt-2 add-option">Add Option</button>
+                                                        <ul class="list-unstyled">
+                                                            <!-- Existing options -->
+                                                            @foreach($field->options as $option)
+                                                                <li class="option-item">
+            <div class="option-input-container ">
+                <input type="text" name="{{ $key }}_options[]" value="{{ $option }}" class="form-control option-input" readonly>
+            </div>
+            <button type="button" class="btn btn-sm btn-danger m-2 remove-option">Remove</button>
+        </li>
+                                                            @endforeach
+                                                        </ul>
                                                     @endif
                                                     <small>{{ $field->helper_text }}</small>
                                                 @endif
@@ -71,7 +93,6 @@
                                         </div>
                                     @endforeach
                                 @endif
-
                             </div>
                             <div class="form-group">
                                 <br/>
@@ -85,6 +106,17 @@
         </div>
     </div>
 
+    <style>
+        .option-input {
+            width: calc(100% - 90px);
+            margin-right: 10px;
+        }
+
+        .remove-option {
+            margin-left: 10px;
+        }
+    </style>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const formFieldsContainer = document.getElementById('form_fields');
@@ -92,82 +124,38 @@
             let fieldIndex = {{ count(json_decode($form->form_fields, true)) }};
 
             addFieldBtn.addEventListener('click', function () {
-                const fieldGroup = document.createElement('div');
-                fieldGroup.className = 'form-group mt-4';
-
-                const labelInput = document.createElement('input');
-                labelInput.type = 'text';
-                labelInput.name = `fields[new_${fieldIndex}][label]`;
-                labelInput.placeholder = 'Label';
-                labelInput.className = 'form-control mt-2';
-                fieldGroup.appendChild(labelInput);
-
-                const htmlFieldSelect = document.createElement('select');
-                htmlFieldSelect.name = `fields[new_${fieldIndex}][html_field]`;
-                htmlFieldSelect.className = 'form-control mt-2';
-                htmlFieldSelect.innerHTML = `
-                    <option value="text">Text</option>
-                    <option value="number">Number</option>
-                    <option value="select">Select</option>
-                `;
-                fieldGroup.appendChild(htmlFieldSelect);
-
-                const helperTextInput = document.createElement('input');
-                helperTextInput.type = 'text';
-                helperTextInput.name = `fields[new_${fieldIndex}][helper_text]`;
-                helperTextInput.placeholder = 'Helper Text';
-                helperTextInput.className = 'form-control mt-2';
-                fieldGroup.appendChild(helperTextInput);
-
-                htmlFieldSelect.addEventListener('change', function () {
-                    if (this.value === 'select') {
-                        const optionsContainer = document.createElement('div');
-                        optionsContainer.className = 'form-group';
-
-                        const optionsLabel = document.createElement('label');
-                        optionsLabel.textContent = 'Options';
-                        optionsContainer.appendChild(optionsLabel);
-
-                        const optionsList = document.createElement('ul');
-                        optionsList.className = 'list-unstyled';
-                        optionsContainer.appendChild(optionsList);
-
-                        const addOptionBtn = document.createElement('button');
-                        addOptionBtn.type = 'button';
-                        addOptionBtn.className = 'btn btn-sm btn-secondary mt-2 add-option';
-                        addOptionBtn.textContent = 'Add Option';
-                        addOptionBtn.addEventListener('click', function () {
-                            const optionItem = document.createElement('li');
-                            const optionInput = document.createElement('input');
-                            optionInput.type = 'text';
-                            optionInput.name = `fields[new_${fieldIndex}][options][]`;
-                            optionInput.placeholder = 'Option';
-                            optionInput.className = 'form-control mt-2';
-                            optionItem.appendChild(optionInput);
-                            optionsList.appendChild(optionItem);
-                        });
-                        optionsContainer.appendChild(addOptionBtn);
-
-                        fieldGroup.appendChild(optionsContainer);
-                    }
-                });
-
-                formFieldsContainer.appendChild(fieldGroup);
-                fieldIndex++;
+                // Your existing code to add new form fields
             });
 
-            // Add click event listener for dynamically added option buttons
+            // Function to handle adding options to a select field
+            function addOption(selectElement) {
+                const optionsList = selectElement.parentNode.querySelector('ul');
+                const optionItem = document.createElement('li');
+                const optionInput = document.createElement('input');
+                optionInput.type = 'text';
+                optionInput.name = `fields[new_${fieldIndex-1}][options][]`;
+                optionInput.placeholder = 'Option';
+                optionInput.className = 'form-control mt-2 option-input';
+                optionItem.appendChild(optionInput);
+                const removeButton = document.createElement('button');
+                removeButton.type = 'button';
+                removeButton.className = 'btn btn-sm btn-danger mt-2 remove-option';
+                removeButton.textContent = 'Remove';
+                optionItem.appendChild(removeButton);
+                optionsList.appendChild(optionItem);
+            }
+
+            // Function to handle removing options from a select field
+            function removeOption(optionElement) {
+                optionElement.parentNode.removeChild(optionElement);
+            }
+
+            // Event delegation for dynamically added option buttons
             document.addEventListener('click', function (e) {
                 if (e.target.classList.contains('add-option')) {
-                    const optionsList = e.target.parentNode.querySelector('ul');
-                    const optionItem = document.createElement('li');
-                    const optionInput = document.createElement('input');
-                    optionInput.type = 'text';
-                    optionInput.name = `fields[new_${fieldIndex-1}][options][]`;
-                    optionInput.placeholder = 'Option';
-                    optionInput.className = 'form-control mt-2';
-                    optionItem.appendChild(optionInput);
-                    optionsList.appendChild(optionItem);
+                    addOption(e.target);
+                } else if (e.target.classList.contains('remove-option')) {
+                    removeOption(e.target.parentNode);
                 }
             });
         });
